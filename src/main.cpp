@@ -1,10 +1,19 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "../headers/Application.h"
 using namespace std;
 
 int main(){
+  /*
+  Clears the file for development purpose
+  */
+  ofstream ofs;
+  ofs.open("../data/applications.txt", ofstream::out | ofstream::trunc);
+  ofs.close();
+
   Application application(
+    2,
     "A big house",
     8000000,
     100000,
@@ -12,12 +21,23 @@ int main(){
     "AAXXXX"
   );
   Application application2(
+    3,
     "A smaller house",
-    8000000,
+    5000000,
     100000,
-    "PANXXXX",
-    "AAXXXX"
+    "PANX",
+    "AAX"
   );
-  cout<<Application::applicationCount<<endl;
+
+  // Saving application object to file
+  application.saveToFile();
+
+  // Reading application vector from file
+  vector<Application> applications = Application::retrieveApplications();
+
+  // Looping over vector and printing details of applications
+  for (auto& application : applications){
+    application.printDetails();
+  }
   return 0;
 }

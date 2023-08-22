@@ -1,0 +1,9 @@
+Application ID: 7930
+Applicant ID: 2
+Application Status: PENDING
+Property Name: A big house
+Property Cost: 8000000
+Salary: 100000
+PAN: PANXXXX
+Aadhaar: AAXXXX
+
