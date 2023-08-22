@@ -7,8 +7,8 @@ using namespace std;
 Application Form
 */
 class Application {
-private:
-  enum status { PENDING, REJECTED, APPROVED }; 
+  private:
+    enum status { PENDING, REJECTED, APPROVED }; 
 
     string propertyName;
     int propertyCost;
@@ -30,6 +30,9 @@ private:
       srand((unsigned) time(NULL));
       applicationID = rand(); 
       ++applicationCount;
+      /*
+        Serialization and file write functionality
+      */
     }
 
     void approveApplication(){
