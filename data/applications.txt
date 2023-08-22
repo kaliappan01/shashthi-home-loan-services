@@ -1,9 +1,4 @@
-Application ID: 7930
-Applicant ID: 2
-Application Status: PENDING
-Property Name: A big house
-Property Cost: 8000000
-Salary: 100000
-PAN: PANXXXX
-Aadhaar: AAXXXX
-
+21210 2 PENDING A_big_house_nice 8000000 100000 PANXXXX AAXXXX
+15426 3 PENDING Smaller_house_Best 5000000 100000 PANX AAX
+22173 4 PENDING A_big_house 8000000 100000 PANXXXX AAXXXX
+7710 5 PENDING A_smaller_house 5000000 100000 PANX AAX

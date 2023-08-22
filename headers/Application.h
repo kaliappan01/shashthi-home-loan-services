@@ -1,104 +1,124 @@
-#include <iostream>
-#include <string>
-#include <random>
-#include <fstream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 /*
 Application Form
 */
-class Application {
-  private:
-    long int applicationID;
-    long int applicantID;
-    string propertyName;
-    long int propertyCost;
-    long int salary;
-    string PAN;
-    string Aadhaar;
-    string applicationStatus;
+class Application
+{
 
-  public:
-    inline static long int applicationCount = 0;
+private:
+  long int applicationID = rand();
+  long int applicantID;
+  string propertyName;
+  long int propertyCost;
+  long int salary;
+  string PAN;
+  string Aadhaar;
+  string applicationStatus;
 
-    Application(long int applicantID=0, string propertyName="", int propertyCost=0, int salary=0, string PAN="", string Aadhaar="", string applicationStatus="PENDING"){
-      srand((unsigned) time(NULL));
-      applicationID = rand(); 
-      this->applicantID = applicantID;
-      this->propertyName = propertyName;
-      this->propertyCost = propertyCost;
-      this->salary = salary;
-      this->PAN = PAN;
-      this->Aadhaar = Aadhaar;
-      this->applicationStatus = applicationStatus;
-      ++applicationCount;
+public:
+  inline static long int applicationCount = 0;
+
+  Application(long int applicantID = 0, string propertyName = "", int propertyCost = 0, int salary = 0, string PAN = "", string Aadhaar = "", string applicationStatus = "PENDING")
+  {
+    this->applicantID = applicantID;
+    this->propertyName = propertyName;
+    this->propertyCost = propertyCost;
+    this->salary = salary;
+    this->PAN = PAN;
+    this->Aadhaar = Aadhaar;
+    this->applicationStatus = applicationStatus;
+    ++applicationCount;
+  }
+  Application(long int applicationID, long int applicantID = 0, string propertyName = "", int propertyCost = 0, int salary = 0, string PAN = "", string Aadhaar = "", string applicationStatus = "PENDING")
+  {
+    this->applicationID = applicationID;
+    this->applicantID = applicantID;
+    this->propertyName = propertyName;
+    this->propertyCost = propertyCost;
+    this->salary = salary;
+    this->PAN = PAN;
+    this->Aadhaar = Aadhaar;
+    this->applicationStatus = applicationStatus;
+  }
+
+  void printDetails()
+  {
+    cout << "Application ID: " << this->applicationID << endl;
+    cout << "applicantID: " << this->applicantID << endl;
+    cout << "propertyName: " << this->propertyName << endl;
+    cout << "propertyCost: " << this->propertyCost << endl;
+    cout << "salary: " << this->salary << endl;
+    cout << "PAN: " << this->PAN << endl;
+    cout << "Aadhaar: " << this->Aadhaar << endl;
+    cout << "applicationStatus: " << this->applicationStatus << endl;
+    cout << "-----------------" << endl;
+  }
+
+  long int getApplicationID()
+  {
+    return applicationID;
+  }
+
+  void approveApplication()
+  {
+    applicationStatus = "APPROVED";
+  }
+
+  void rejectApplication()
+  {
+    applicationStatus = "REJECTED";
+  }
+
+  void saveToFile()
+  {
+    ofstream file("../data/applications.txt", ios::app);
+    if (file.is_open())
+    {
+      file << applicationID << " " << applicantID << " " << applicationStatus << " " << propertyName << " " << propertyCost << " " << salary << " " << PAN << " " << Aadhaar << "\n";
     }
-    
-    void printDetails(){
-      cout<<"Application ID: "<<applicationID<<endl;
+    else
+    {
+      cerr << "Unable to open file for writing" << endl;
     }
+    file.close();
+  }
 
-    long int getApplicationID(){
-      return applicationID;
-    }
+  static vector<Application> retrieveApplications()
+  {
+    vector<Application> result;
 
-    void approveApplication(){
-      applicationStatus = "APPROVED";
-    }
+    ifstream input("../data/applications.txt");
+    if (input)
+    {
 
-    void rejectApplication(){
-      applicationStatus = "REJECTED";
-    }
+      string line;
+      while (getline(input, line))
+      {
 
-    void saveToFile() {
-      ofstream file("../data/applications.txt", ios::app);
-      if (file.is_open()){
-        file<<"Application ID: "<<applicationID<<"\n";
-        file<<"Applicant ID: "<<applicantID<<"\n";
-        file<<"Application Status: "<<applicationStatus<<"\n";
-        file<<"Property Name: "<<propertyName<<"\n";
-        file<<"Property Cost: "<<propertyCost<<"\n";
-        file<<"Salary: "<<salary<<"\n";
-        file<<"PAN: "<<PAN<<"\n";
-        file<<"Aadhaar: "<<Aadhaar<<"\n";
-        file<<"\n";
-      } else {
-        cerr<<"Unable to open file for writing"<<endl;
+        istringstream iss(line);
+        long int applicationID;
+        long int applicantID;
+        string applicationStatus;
+        string propertyName;
+        long int propertyCost;
+        long int salary;
+        string PAN;
+        string Aadhaar;
+
+        iss >> applicationID;
+        iss >> applicantID;
+        iss >> applicationStatus;
+        iss >> propertyName;
+        iss >> propertyCost;
+        iss >> salary;
+        iss >> PAN;
+        iss >> Aadhaar;
+        Application tempApp(applicationID, applicantID, propertyName, propertyCost, salary, PAN, Aadhaar, applicationStatus);
+        result.push_back(tempApp);
       }
     }
-
-    static vector<Application> retrieveApplications(){
-      vector<Application> applications;
-      ifstream file("../data/applications.txt");
-      if(file.is_open()){
-        string line;
-        Application tempApp;
-        while(getline(file, line)){
-          if (line.empty()){
-            applications.push_back(tempApp);
-            tempApp = Application();
-          }
-          if(line.find("Applicant ID: ") != string::npos){
-            tempApp.applicantID = stoi(line.substr(14));
-          } else if (line.find("Application Status: ") != string::npos){
-            tempApp.applicationStatus = line.substr(20);
-          } else if (line.find("Property Name: ") != string::npos){
-            tempApp.propertyName = line.substr(15);
-          } else if (line.find("Property Cost: ") != string::npos){
-            tempApp.propertyCost = stoi(line.substr(15));
-          } else if (line.find("Salary: ") != string::npos){
-            tempApp.salary = stoi(line.substr(8));
-          } else if (line.find("PAN: ") != string::npos){
-            tempApp.PAN = line.substr(5);
-          } else if (line.find("Aadhaar: ") != string::npos){
-            tempApp.Aadhaar = line.substr(9);
-          }
-        }
-        file.close();
-      } else {
-        cerr << "Unable to open file for reading" << endl;
-      }
-      return applications;
-    }    
+    return result;
+  };
 };
