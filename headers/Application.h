@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+// #include "calculators.h"
+
 using namespace std;
 
 /*
@@ -16,10 +18,13 @@ private:
   string PAN;
   string Aadhaar;
   string applicationStatus;
-
+    const float RATE_OF_INTEREST = 8.5;
+    const float PART_OF_THE_SALARY=0.6;
+    const int LOAN_ELIGIBILITY_CONSTANT =  60*PART_OF_THE_SALARY;
+    
 public:
   inline static long int applicationCount = 0;
-
+  friend class Calculators;
   Application(long int applicantID = 0, string propertyName = "", int propertyCost = 0, int salary = 0, string PAN = "", string Aadhaar = "", string applicationStatus = "PENDING")
   {
     this->applicantID = applicantID;
@@ -42,7 +47,17 @@ public:
     this->Aadhaar = Aadhaar;
     this->applicationStatus = applicationStatus;
   }
+  void isEligibleForLoan(){
+    bool isEligible = LOAN_ELIGIBILITY_CONSTANT*this->salary<=propertyCost;
+    cout << (isEligible?"YES":"NO")<<endl;
+}
 
+void getEMI(int tenure_in_months){
+    float compounded_rate = pow(1+RATE_OF_INTEREST, tenure_in_months);
+    float denominator = (double)(compounded_rate-1);
+    float numerator = this->propertyCost*RATE_OF_INTEREST*compounded_rate;
+    cout <<"Rs." << fixed <<setprecision(2) << (numerator/denominator)<<endl;
+}
   void printDetails()
   {
     cout << "Application ID: " << this->applicationID << endl;
@@ -122,3 +137,4 @@ public:
     return result;
   };
 };
+
