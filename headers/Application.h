@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 // #include "calculators.h"
-
+#include<iostream>
+#include<fstream>
 using namespace std;
 
 /*
@@ -18,14 +19,10 @@ private:
   string PAN;
   string Aadhaar;
   string applicationStatus;
-    const float RATE_OF_INTEREST = 8.5;
-    const float PART_OF_THE_SALARY=0.6;
-    const int LOAN_ELIGIBILITY_CONSTANT =  60*PART_OF_THE_SALARY;
-    
-public:
+  public:
   inline static long int applicationCount = 0;
-  friend class Calculators;
-  Application(long int applicantID = 0, string propertyName = "", int propertyCost = 0, int salary = 0, string PAN = "", string Aadhaar = "", string applicationStatus = "PENDING")
+friend istream& operator>>(istream &in, Application &a);
+ Application(long int applicantID = 0, string propertyName = "", int propertyCost = 0, int salary = 0, string PAN = "", string Aadhaar = "", string applicationStatus = "PENDING")
   {
     this->applicantID = applicantID;
     this->propertyName = propertyName;
@@ -47,17 +44,7 @@ public:
     this->Aadhaar = Aadhaar;
     this->applicationStatus = applicationStatus;
   }
-  void isEligibleForLoan(){
-    bool isEligible = LOAN_ELIGIBILITY_CONSTANT*this->salary<=propertyCost;
-    cout << (isEligible?"YES":"NO")<<endl;
-}
-
-void getEMI(int tenure_in_months){
-    float compounded_rate = pow(1+RATE_OF_INTEREST, tenure_in_months);
-    float denominator = (double)(compounded_rate-1);
-    float numerator = this->propertyCost*RATE_OF_INTEREST*compounded_rate;
-    cout <<"Rs." << fixed <<setprecision(2) << (numerator/denominator)<<endl;
-}
+  
   void printDetails()
   {
     cout << "Application ID: " << this->applicationID << endl;
@@ -135,6 +122,44 @@ void getEMI(int tenure_in_months){
       }
     }
     return result;
-  };
+  }
+  friend void getEMI(Application *applicant,int tenure_in_months);
+  friend void isEligibleForLoan(Application *applicant);
 };
 
+  void isEligibleForLoan(Application *applicant){
+    long int salary = applicant->salary;
+    float PART_OF_THE_SALARY=0.6;
+    const int LOAN_ELIGIBILITY_CONSTANT =  60*PART_OF_THE_SALARY;
+    bool isEligible = LOAN_ELIGIBILITY_CONSTANT*(applicant->salary)<=(applicant->propertyCost);
+    cout << (isEligible?"YES":"NO")<<endl;
+}
+
+
+void getEMI(Application *application,int tenure_in_months){
+    const int RATE_OF_INTEREST =  8.5;
+    float compounded_rate = pow(1+RATE_OF_INTEREST, tenure_in_months);
+    float denominator = (double)(compounded_rate-1);
+    float numerator = application->propertyCost*RATE_OF_INTEREST*compounded_rate;
+    cout <<"Rs." << fixed <<setprecision(2) << (numerator/denominator)<<endl;
+}
+ istream& operator>>(istream &in, Application &a)
+{
+
+  string line;
+  getline(in, line);
+  // cout  << line;
+  // while(in!=)
+  std::stringstream ss(line);
+  // cout << in.getline();
+  ss>>a.applicationID;
+  ss>>a.applicantID;
+  ss>>a.applicationStatus;
+  ss>>a.propertyName;
+  ss>>a.propertyCost;
+  ss>>a.salary;
+  ss>>a.PAN;
+  ss>>a.Aadhaar;
+  return in;
+}
+ 

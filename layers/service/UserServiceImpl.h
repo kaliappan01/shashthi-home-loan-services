@@ -9,7 +9,6 @@ class UserServiceImpl: public UserService{
     UserServiceImpl(UserDAO *user_dao_obj){
         this->isAuthenticated=false;
         this->user_dao_obj= user_dao_obj;
-        std::cout <<"user service loading..."<<endl;
         this->user_dao_obj->readFromFile();
     }
     virtual bool userIsAdmin(User user){
